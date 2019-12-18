@@ -1,0 +1,143 @@
+﻿@model OgrenciBilgiSistemi.WebUI.ViewModels.StudentFormViewModel
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mr-2 ml-2">
+        <div class="col">
+            <h2 class="mt-3 mb-3">Yeni Öğrenci Ekle</h2>
+            @using (Html.BeginForm("Add", "Student"))
+            {
+                <div>
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                </div>
+                <input type="submit" value="Kaydet" class="btn btn-primary mb-3" />
+
+                <div class="row">
+                    <div class="col-md-6 ">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.FirstName)
+                            @Html.TextBoxFor(m => m.StudentDto.FirstName, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.LastName)
+                            @Html.TextBoxFor(m => m.StudentDto.LastName, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.StudentNumber)
+                            @Html.TextBoxFor(m => m.StudentDto.StudentNumber, new { @class = "form-control", @placeholder = "1234567890" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.DateOfBirth)
+                            @Html.EditorFor(m => m.StudentDto.DateOfBirth, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.StartingDate)
+                            @Html.EditorFor(m => m.StudentDto.StartingDate, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.Gender)
+                            @Html.EnumDropDownListFor(m => m.StudentDto.Gender, "Cinsiyet seçiniz!", new { @class = "form-control" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 justify-content-center">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.CityId)
+                            @Html.DropDownListFor(m => m.StudentDto.CityId, new SelectList(Model.CityDtos, "Id", "Name"), "Doğum yeri seçiniz!", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.UniversityId)
+                            @Html.DropDownListFor(m => m.StudentDto.UniversityId, new SelectList(Model.UniversityDtos, "Id", "Name"), "Üniversite seçiniz!", new { @class = "form-control", @id = "universities" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.FacultyId)
+                            @Html.DropDownListFor(m => m.StudentDto.FacultyId, new List<SelectListItem>(), "Fakülte seçiniz!", new { @class = "form-control", @id = "faculties" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.DepartmentId)
+                            @Html.DropDownListFor(m => m.StudentDto.DepartmentId, new List<SelectListItem>(), "Bölüm seçiniz!", new { @class = "form-control", @id = "departments" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.EducationTypeId)
+                            @Html.DropDownListFor(m => m.StudentDto.EducationTypeId, new SelectList(Model.EducationTypeDtos, "Id", "Name"), "Öğrenim türü seçiniz!", new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.StudentDto.GraduateTypeId)
+                            @Html.DropDownListFor(m => m.StudentDto.GraduateTypeId, new SelectList(Model.GraduateTypeDtos, "Id", "Name"), "Mezuniyet türü seçiniz!", new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            let dropListFaculties = $('#faculties');
+            let dropListDepartments = $('#departments');
+
+            $('#universities').on('change', function () {
+                let dropList = $(this);
+
+                if (dropList.val() != "") {
+                    $.ajax({
+                        method: 'POST',
+                        url: '/university/getfacultiesbyuniversityid?id=' + dropList.val(),
+                        success: function (data) {
+
+                            console.log(data);
+                            dropListFaculties.empty();
+                            dropListDepartments.empty();
+                            dropListFaculties.append('<option value="">Fakülte seçiniz!</option>');
+                            dropListDepartments.append('<option value="">Bölüm seçiniz!</option>');
+                            $.each(data, function (key, value) {
+                                dropListFaculties.append($('<option />').val(value.Id).text(value.Name));
+                            });
+                        },
+                        error: function () {
+                            alert('Hata oluştu! Lütfen daha sonra tekrar deneyiniz!');
+                        }
+                    });
+                } else {
+                    dropListFaculties.empty();
+                    dropListDepartments.empty();
+                    dropListFaculties.append('<option value="">Fakülte seçiniz!</option>');
+                    dropListDepartments.append('<option value="">Bölüm seçiniz!</option>');
+                }
+            });
+
+            $('#faculties').on('change', function () {
+                let dropList = $(this);
+
+                if (dropList.val() != "") {
+                    $.ajax({
+                        method: 'POST',
+                        url: '/faculty/getdepartmentsbyfacultyid?id=' + dropList.val(),
+                        success: function (data) {
+
+                            dropListDepartments.empty();
+                            dropListDepartments.append('<option value="">Bölüm seçiniz!</option>');
+                            $.each(data, function (key, value) {
+                                dropListDepartments.append($('<option />').val(value.Id).text(value.Name));
+                            });
+                        },
+                        error: function () {
+                            alert('Hata oluştu! Lütfen daha sonra tekrar deneyiniz!');
+                        }
+                    });
+                } else {
+                    dropListDepartments.empty();
+                    dropListDepartments.append('<option value="">Bölüm seçiniz!</option>');
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿@model OgrenciBilgiSistemi.WebUI.ViewModels.FacultyListViewModel
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid">
+    <div class="row mr-2 ml-2">
+        <div class="col">
+            <h2 class="mt-3 mb-3">Fakülte Listesi</h2>
+            @Html.ActionLink("Yeni Fakülte Ekle", "Add", "Faculty", null, new { @class = "btn btn-md btn-success mb-3" })
+
+            @if (Model.FacultyDtos.Count() == 0)
+            {
+                <p>Sistemde kayıtlı fakülte bulunmamaktadır!</p>
+            }
+            else
+            {
+                <table id="faculties" class="table table-hover table-striped text-center">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(m => m.FacultyDto.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.FacultyDto.DeanName)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(m => m.FacultyDto.Description)
+                            </th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var faculty in Model.FacultyDtos)
+                        {
+                            <tr>
+                                <td>@faculty.Name</td>
+                                <td>@faculty.DeanName</td>
+                                <td>@faculty.Description</td>
+                                <td>
+                                    @Html.ActionLink("Güncelle", "Update", "Faculty", new { id = faculty.Id }, new { @class = "btn btn-sm btn-warning" })
+                                </td>
+                                <td>
+                                    <button data-faculty-id="@faculty.Id" type="submit" class="btn btn-sm btn-danger js-delete">Sil</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            $('#faculties').on('click', '.js-delete', function () {
+                let button = $(this);
+
+                bootbox.confirm("İlgili fakülteyi silmek istediğinize emin misiniz?", function (result) {
+                    if (result) {
+                        $.ajax({
+                            url: '/faculty/delete',
+                            method: 'POST',
+                            data: { id: button.attr('data-faculty-id') },
+                            success: function () {
+                                location.reload(true);
+                            },
+                            error: function (jqXHR) {
+                                if (jqXHR.status === 404)
+                                    return bootbox.alert('Böyle bir fakülte bulunmamaktadır!');
+
+                                bootbox.alert('Oops! Bir hata meydana geldi!');
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

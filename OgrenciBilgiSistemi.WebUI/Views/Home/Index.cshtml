@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            @Html.ActionLink("Üniversite Ekranı", "List", "University", null, new { @class = "btn btn-primary btn-lg btn-block" })
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            @Html.ActionLink("Fakülte Ekranı", "List", "Faculty", null, new { @class = "btn btn-warning btn-lg btn-block" })
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            @Html.ActionLink("Bölüm Ekranı", "List", "Department", null, new { @class = "btn btn-info btn-lg btn-block" })
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-6">
+            @Html.ActionLink("Öğrenci Ekranı", "List", "Student", null, new { @class = "btn btn-success btn-lg btn-block" })
+        </div>
+    </div>
+</div>

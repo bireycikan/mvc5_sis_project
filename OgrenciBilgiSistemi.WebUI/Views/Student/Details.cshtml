@@ -1,0 +1,78 @@
+﻿@model OgrenciBilgiSistemi.WebUI.ViewModels.StudentDetailsViewModel
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mr-2 ml-2">
+        <div class="col">
+            <h2 class="mt-3 mb-3">Öğrenci Detayı</h2>
+            @Html.ActionLink("Geri Dön", "List", "Student", null, new { @class = "btn btn-md btn-success mb-3" })
+
+            <div class="form-group row">
+                @Html.LabelFor(m => m.StudentDto.FirstName, "Öğrencinin Adı :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.StudentDto.FirstName, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.StudentDto.LastName, "Öğrencinin Soyadı :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.StudentDto.LastName, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.UniversityDto.Name, "Üniversite Adı :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @if (Model.UniversityDto == null)
+                    {
+                        <p class="form-control-plaintext font-italic text-danger text-uppercase">Üniversite kaydı yok!</p>
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m.UniversityDto.Name, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                    }
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.FacultyDto.Name, "Fakülte Adı :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @if (Model.FacultyDto == null)
+                    {
+                        <p class="form-control-plaintext font-italic text-danger text-uppercase">Fakülte kaydı yok!</p>
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m.FacultyDto.Name, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                    }
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.DepartmentDto.Name, "Bölüm Adı :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @if (Model.DepartmentDto == null)
+                    {
+                        <p class="form-control-plaintext font-italic text-danger text-uppercase">Bölüm kaydı yok!</p>
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(m => m.DepartmentDto.Name, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                    }
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.EducationTypeDto.Name, "Öğrenim Türü :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.EducationTypeDto.Name, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                </div>
+            </div>
+            <div class="form-group row">
+                @Html.LabelFor(m => m.GraduateTypeDto.Name, "Mezuniyet Türü :", new { @class = "col-sm-2 col-form-label font-weight-bold" })
+                <div class="col-sm-10">
+                    @Html.TextBoxFor(m => m.GraduateTypeDto.Name, new { @class = "form-control-plaintext font-italic", @readonly = "true" })
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
